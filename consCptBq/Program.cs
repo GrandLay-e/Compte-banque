@@ -10,7 +10,11 @@ namespace consCptBq
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Au boulot");
+            Compte c1 = new Compte(12345, "toto", 1000, -500);
+            Compte c2 = new Compte(45657, "titi", 2000, -1000);
+            
+            Console.WriteLine(c1.ToString());
+            Console.WriteLine(c2.ToString());
         }
     }
 }

@@ -1,0 +1,15 @@
+Question1
+
+Combien de classes sont utilisées dans cet extrait ; nommez-les ?
+
+Questions 2
+
+Combien d’objets sont créés ; nommez-les ?
+
+Questions 3
+
+Combien de méthodes sont utilisées ; précisez si elles sont d’objet ou de classe ?
+
+Question 4
+
+Faire le diagramme de classes des classes métiers en faisant figurer les signatures des méthodes et l’information sur leur portée (d’objet ou de classe).

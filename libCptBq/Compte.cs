@@ -18,10 +18,26 @@ namespace libCptBq
         /// <summary>
         /// Propriétés implémentées automatiquement
         /// </summary>
-        public int Numero { get; set; }
-        public string Nom { get; set; }
-        public decimal Solde { get; set; }
-        public decimal DecouvertAutorise { get; set; }
+        public int Numero
+        {
+            get{return numero;}
+            set{numero = value;}
+        }
+        public string Nom
+        {
+            get{return nom;}
+            set{nom = value;}
+        }
+        public decimal Solde
+        {
+            get{return solde;}
+            set{solde = value;}
+        }
+        public decimal DecouvertAutorise
+        {
+            get{return decouvertAutorise;}
+            set{decouvertAutorise = value;}
+        }
 
 
         /// <summary>
@@ -33,14 +49,20 @@ namespace libCptBq
         /// <param name="decouvertAutorise">le découvert autorisé</param>
         public Compte(int numero, string nom, decimal solde, decimal decouvertAutorise)
         {
-
+            Numero = numero;
+            Nom = nom;
+            Solde = solde;
+            DecouvertAutorise = decouvertAutorise;
         }
         /// <summary>
         /// Constructeur de compte par défaut
         /// </summary>
         public Compte()
         {
-
+            this.numero = 0;
+            this.nom = "";
+            this.solde = 0;
+            this.decouvertAutorise = 0;
         }
         /// <summary>
         /// Réecriture de la méthode ToString
@@ -54,7 +76,11 @@ namespace libCptBq
         /// <param name="montant">Le montant à créditer</param>
         public void Crediter(decimal montant)
         {
-
+            if (montant < 1m || montant == 0)
+            {
+                return;
+            }
+            Solde += montant;
         }
 
         /// <summary>
@@ -64,7 +90,12 @@ namespace libCptBq
         /// <returns>True si le débit a été effectué, False sinon</returns>
         public bool Debiter(decimal montant)
         {
-            return false;
+            if (montant < 0 || montant == 0 || montant > Solde)
+            {
+                return false;
+            }
+            Solde -= montant;
+            return true;
         }
 
 
@@ -76,7 +107,16 @@ namespace libCptBq
         /// <returns></returns>
         public bool Transferer(decimal n, Compte c)
         {
-            return false; 
+            if(n < 1 || n > Solde)
+            {
+                return false;
+            }
+            else
+            {
+                this.Debiter(n);
+                c.Crediter(n);
+            } 
+            return true;
         }
 
 
@@ -87,8 +127,14 @@ namespace libCptBq
         /// <returns></returns>
         public bool Superieur(Compte c)
         {
+            if(this.solde > c.solde)
+                return true;
             return false;
         }
-
+        public override string ToString()
+        {
+            //numero: 123456 nom: toto solde: 1000,50 decouvert autorisé: -500,00"
+            return $"numero: {Numero} nom: {Nom} solde: {Solde} decouvert autorisé: {DecouvertAutorise}";
+        }
     }
 }
