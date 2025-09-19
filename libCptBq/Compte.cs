@@ -59,10 +59,10 @@ namespace libCptBq
         /// </summary>
         public Compte()
         {
-            this.numero = 0;
-            this.nom = "";
-            this.solde = 0;
-            this.decouvertAutorise = 0;
+            this.Numero = 0;
+            this.Nom = "";
+            this.Solde = 0;
+            this.DecouvertAutorise = 0;
         }
         /// <summary>
         /// Réecriture de la méthode ToString
@@ -133,8 +133,7 @@ namespace libCptBq
         }
         public override string ToString()
         {
-            //numero: 123456 nom: toto solde: 1000,50 decouvert autorisé: -500,00"
-            return $"numero: {Numero} nom: {Nom} solde: {Solde} decouvert autorisé: {DecouvertAutorise}";
+            return $"numero: {Numero} nom: {Nom} solde: {Solde} decouvert autorisé: {DecouvertAutorise}\n";
         }
     }
 }

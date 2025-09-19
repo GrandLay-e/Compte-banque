@@ -55,7 +55,7 @@ namespace testUnCptBq
                 DecouvertAutorise = -500.00m
             };
 
-            string expected = "numero: 123456 nom: toto solde: 1000,50 decouvert autorisé: -500,00";
+            string expected = "numero: 123456 nom: toto solde: 1000,50 decouvert autorisé: -500,00\n";
 
             // Agir
             string result = compte.ToString();
