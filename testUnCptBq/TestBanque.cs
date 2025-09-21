@@ -143,12 +143,13 @@ namespace testUnCptBq
             Banque b = new Banque();
             b.AjouteCompte(c1);
             b.AjouteCompte(c2);
-            string expected = "numero: 12345 nom: toto solde: 1000,00 decouvert autorisé: -500,00\n" +
-                              "numero: 45657 nom: titi solde: 2000,00 decouvert autorisé: -1000,00\n";
+            StringBuilder expected = new StringBuilder();
+            expected.AppendLine("numero: 12345 nom: toto solde: 1000,00 decouvert autorisé: -500,00");
+            expected.AppendLine("numero: 45657 nom: titi solde: 2000,00 decouvert autorisé: -1000,00");
             //Agir
             string result = b.ToString();
             //Assert
-            Assert.AreEqual(expected, result, "La méthode ToString() de la classe Banque ne retourne pas le format attendu.");
+            Assert.AreEqual(expected.ToString(), result, "La méthode ToString() de la classe Banque ne retourne pas le format attendu.");
         }
 
         [TestMethod]

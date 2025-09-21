@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Reflection;
+using System.Text;
 
 namespace testUnCptBq
 {
@@ -43,6 +44,78 @@ namespace testUnCptBq
             Assert.AreEqual("", compte.Nom, "le nom doit être vide");
             Assert.AreEqual(0, compte.Solde, "Le solde doit être initialisé à 0");
         }
+
+        [TestMethod]
+        public void AjouterMouvementValide()
+        {
+            // Arranger
+            Compte compte = new Compte
+            {
+                Numero = 123456,
+                Nom = "toto",
+                Solde = 1000.50m,
+                DecouvertAutorise = -500.00m
+            };
+
+            Mouvement mouvement = new Mouvement
+            {
+                Montant = 150m,
+                DateMvt =  new DateTime(2025, 05, 1), 
+                LeType = new TypeMouvement("vir") 
+            };
+            Mouvement mouvement2 = new Mouvement
+            {
+                Montant = 200m,
+                DateMvt = new DateTime(2025, 05, 2),
+                LeType = new TypeMouvement("dab")
+            };
+
+            // Agir
+            compte.AjouterMouvement(mouvement);
+            compte.AjouterMouvement(mouvement2);
+
+            // Assert
+            Assert.AreEqual(2, compte.MesMouvements.Count, "Le mouvement n'a pas été ajouté correctement.");
+            Assert.AreEqual(mouvement, compte.MesMouvements[0], "Le premier mouvement ajouté n'est pas correct.");
+            Assert.AreEqual(mouvement2, compte.MesMouvements[1], "Le deuxième mouvement ajouté n'est pas correct.");
+
+        }
+
+        [TestMethod]
+        public void AjouterMouvementInvalide_ThrowsException()
+        {
+            // Arranger
+            Compte compte = new Compte
+            {
+                Numero = 123456,
+                Nom = "toto",
+                Solde = 1000.50m,
+                DecouvertAutorise = -500.00m
+            };
+            Mouvement mouvementInvalide = new Mouvement
+            {
+                Montant = 2000m, // Montant supérieur au solde + découvert autorisé
+                DateMvt = new DateTime(2025, 05, 1),
+                LeType = new TypeMouvement("pre")
+            };
+            // Agir & Assert
+            try
+            {
+                compte.AjouterMouvement(mouvementInvalide); // Cela devrait lancer une exception
+                Assert.Fail("Une exception aurait dû être levée pour un mouvement invalide.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Assert.AreEqual("Débit impossible, solde insuffisant.", ex.Message, "Le message de l'exception n'est pas correct.");
+            }
+            catch (Exception)
+            {
+                Assert.Fail("Une exception non gérée a été levée.");
+            }
+            // Vérifier que le mouvement n'a pas été ajouté
+            Assert.AreEqual(0, compte.MesMouvements.Count, "Aucun mouvement ne devrait avoir été ajouté.");
+        }
+
         [TestMethod]
         public void ToString_ReturnsCorrectFormat()
         {
@@ -54,8 +127,7 @@ namespace testUnCptBq
                 Solde = 1000.50m,
                 DecouvertAutorise = -500.00m
             };
-
-            string expected = "numero: 123456 nom: toto solde: 1000,50 decouvert autorisé: -500,00\n";
+            string expected = "numero: 123456 nom: toto solde: 1000,50 decouvert autorisé: -500,00" + Environment.NewLine;
 
             // Agir
             string result = compte.ToString();
@@ -63,6 +135,8 @@ namespace testUnCptBq
             // Assert
             Assert.AreEqual(expected, result, "La méthode ToString() ne retourne pas le format attendu.");
         }
+
+        [TestMethod]
         public void ToString_ReturnsFormatNull()
         {
             // Arranger
@@ -73,8 +147,7 @@ namespace testUnCptBq
                 Solde = 0.00m,
                 DecouvertAutorise = 0.00m
             };
-
-            string expected = "numero: 0 nom:  solde: 0,00 decouvert autorisé: 0,00";
+            string expected = "numero: 0 nom:  solde: 0,00 decouvert autorisé: 0,00" + Environment.NewLine;
 
             // Agir
             string result = compte.ToString();
@@ -82,6 +155,75 @@ namespace testUnCptBq
             // Assert
             Assert.AreEqual(expected, result, "La méthode ToString() ne retourne pas le format attendu.");
         }
+
+        [TestMethod]
+        public void ToString_AvecMouvement_ReturnsCorrectFormat()
+        {
+            // Arranger
+            Compte compte = new Compte
+            {
+                Numero = 123456,
+                Nom = "toto",
+                Solde = 1000.50m,
+                DecouvertAutorise = -500.00m
+            };
+            compte.AjouterMouvement(new Mouvement(200.00m, new DateTime(2023, 10, 1), "pre"));
+            StringBuilder expected = new StringBuilder();
+            expected.AppendLine("numero: 123456 nom: toto solde: 800,50 decouvert autorisé: -500,00");
+            expected.AppendLine($"01/10/2023 - Prélèvement de 200,00");
+            // Agir
+            string result = compte.ToString();
+            // Assert
+            Assert.AreEqual(expected.ToString(), result, "La méthode ToString() ne retourne pas le format attendu avec les mouvements.");
+        }
+        [TestMethod]
+        public void ToString_AvecPlusieursMouvements_ReturnsCorrectFormat()
+        {
+            // Arranger
+            Compte compte = new Compte
+            {
+                Numero = 123456,
+                Nom = "toto",
+                Solde = 1000.50m,
+                DecouvertAutorise = -500.00m
+            };
+            compte.AjouterMouvement(new Mouvement(200.00m, new DateTime(2023, 10, 1), "pre"));
+            compte.AjouterMouvement(new Mouvement(150.00m, new DateTime(2023, 10, 5), "des"));
+            StringBuilder expected = new StringBuilder();
+            expected.AppendLine("numero: 123456 nom: toto solde: 950,50 decouvert autorisé: -500,00");
+            expected.AppendLine($"01/10/2023 - Prélèvement de 200,00");
+            expected.AppendLine($"05/10/2023 - Dépôt d'espèce de 150,00");
+            // Agir
+            string result = compte.ToString();
+            // Assert
+            Assert.AreEqual(expected.ToString(), result, "La méthode ToString() ne retourne pas le format attendu avec plusieurs mouvements.");
+        }
+
+        [TestMethod]
+        public void ToStringAvecMouvementInvalide_ReturnsCorrectFormat()
+        {
+            // Arranger
+            Compte compte = new Compte
+            {
+                Numero = 123456,
+                Nom = "toto",
+                Solde = 1000.50m,
+                DecouvertAutorise = -500.00m
+            };
+
+            // Mouvement invalide (pas assez dans le compte pour faire ce prélèvement)
+            string toStringAttendu = "numero: 123456 nom: toto solde: 1000,50 decouvert autorisé: -500,00" + Environment.NewLine;
+            
+            // Agir
+            try
+            {
+                compte.AjouterMouvement(2000m, new DateTime(2023, 10, 1), "pre");
+            }catch (InvalidOperationException ex){}
+
+            // Assert
+            Assert.AreEqual(toStringAttendu, compte.ToString(), "La méthode ToString() ne devrait pas changer.");
+        }
+
         [TestMethod]
         public void Crediter_AugmenteSolde_CorrectementTested()
         {

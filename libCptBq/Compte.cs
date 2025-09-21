@@ -90,7 +90,7 @@ namespace libCptBq
         /// <returns>True si le débit a été effectué, False sinon</returns>
         public bool Debiter(decimal montant)
         {
-            if (montant < 0 || montant == 0 || montant > (Solde + Math.Abs(DecouvertAutorise)))
+            if (montant < 0 || montant > (Solde + Math.Abs(DecouvertAutorise)))
             {
                 return false;
             }
@@ -127,23 +127,23 @@ namespace libCptBq
 
         public void AjouterMouvement(Mouvement m)
         {
-            MesMouvements.Add(m);
+            decimal tempsSolde = Solde;
+            if (m.LeType.Sens == '-')
+            {
+                if (!this.Debiter(m.Montant))
+                    throw new InvalidOperationException("Débit impossible, solde insuffisant.");
+            }
+            else
+                this.Crediter(m.Montant);
+
+            if (tempsSolde != Solde)
+                MesMouvements.Add(m);
         }
 
         public void AjouterMouvement(decimal montant, DateTime dateMvt, string codeType)
         {
             Mouvement m = new Mouvement(montant, dateMvt, codeType);
-            decimal tempsSolde = Solde;
-            if (m.LeType.Sens == '-')
-            {
-                if (!this.Debiter(montant))
-                    throw new InvalidOperationException("Débit impossible, solde insuffisant.");
-            }
-            else
-                this.Crediter(montant);
-
-            if (tempsSolde != Solde)
-                AjouterMouvement(m);
+            AjouterMouvement(m);
         }
 
         /// <summary>

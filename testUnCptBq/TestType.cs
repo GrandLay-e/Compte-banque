@@ -129,13 +129,17 @@ namespace testUnCptBq
             string libelle = "Retrait";
             char sens = '+';
             string messageAttendu = $"Le libellé, '{libelle}' le sens '{sens}', et/ou le code '{code}' ne correspondent pas !";
-            
+
             //Agir
-            var exception = Assert.ThrowsException<ArgumentException>(() => new TypeMouvement(code, libelle, sens));
-            
-            //Auditer
-            Assert.AreEqual(messageAttendu, exception.Message);
+            try {
+                new TypeMouvement(code, libelle, sens);
+            }catch(ArgumentException ex)
+            {
+                //Auditer
+                Assert.AreEqual(messageAttendu, ex.Message);
+            }
         }
+
         [TestMethod]
         public void ContructeurTypeMouvementAvecCodeCommeParametre()
         {

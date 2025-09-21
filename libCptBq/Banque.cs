@@ -5,13 +5,14 @@ namespace libCptBq
 {
     public class Banque
     {
+        //___________________________________________________________________________________///////////
         /// <summary>
         /// Les attributs de la classe Banque
         /// </summary>
         private List<Compte> mesComptes;
         private List<TypeMouvement> mesTypes;
 
-
+        //___________________________________________________________________________________///////////
         /// <summary>
         /// Les propriétés de la classe Banque
         /// </summary>
@@ -26,25 +27,28 @@ namespace libCptBq
             get { return mesTypes; }
             set { mesTypes = value; }
         }
-
+        
+        //___________________________________________________________________________________///////////
         /// <summary>
         /// Le constructeur par défaut de la classe Banque
         /// </summary>
         public Banque()
         {
-            mesComptes = new List<Compte>();
-            mesTypes = new List<TypeMouvement>();
+            MesComptes = new List<Compte>();
+            MesTypes = new List<TypeMouvement>();
         }
 
+        //___________________________________________________________________________________///////////
         /// <summary>
         /// Adds a new type to the collection.
         /// </summary>
         /// <param name="unType">The type to add to the collection. Cannot be <see langword="null"/>.</param>
         public void AjouterType(TypeMouvement unType)
         {
-            this.mesTypes.Add(unType);
+            this.MesTypes.Add(unType);
         }
 
+        //___________________________________________________________________________________///////////
         /// <summary>
         /// Ajout d'un type dans la liste des types de la banque
         /// </summary>
@@ -57,6 +61,7 @@ namespace libCptBq
             AjouterType(new TypeMouvement(code, libelle, sens));
         }
 
+        //___________________________________________________________________________________///////////
         /// <summary>
         /// Ajouter un compte dans la liste des comptes de la banque
         /// </summary>
@@ -67,6 +72,7 @@ namespace libCptBq
                 MesComptes.Add(c);
         }
 
+        //___________________________________________________________________________________///////////
         /// <summary>
         /// Méthode d'ajout d'un compte dans la liste des comptes de la banque avec les paramètres de compte
         /// </summary>
@@ -79,6 +85,7 @@ namespace libCptBq
             AjouteCompte(new Compte(numero, nom, solde, decouverte));
         }
 
+        //___________________________________________________________________________________///////////
         /// <summary>
         /// Recupèrer un compte par son numéro
         /// </summary>
@@ -96,6 +103,7 @@ namespace libCptBq
             return null;
         }
 
+        //___________________________________________________________________________________///////////
         /// <summary>
         /// Méthode qui retourne le compte avec le solde le plus élevé
         /// </summary>      
@@ -118,6 +126,7 @@ namespace libCptBq
             return maxCompte;
         }
 
+        //___________________________________________________________________________________///////////
         /// <summary>
         /// Méthode ToString de la classe Banque
         /// </summary>
