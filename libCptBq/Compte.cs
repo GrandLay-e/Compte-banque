@@ -14,6 +14,7 @@ namespace libCptBq
         private string nom;
         private decimal solde;
         private decimal decouvertAutorise; // valeur négative
+        private List<Mouvement> mesMouvements;
 
         /// <summary>
         /// Propriétés implémentées automatiquement
@@ -39,6 +40,11 @@ namespace libCptBq
             set{decouvertAutorise = value;}
         }
 
+        public List<Mouvement> MesMouvements
+        {
+            get { return mesMouvements; }
+            set { mesMouvements = value; }
+        }
 
         /// <summary>
         /// Constructeur à 4 arguments
@@ -53,6 +59,7 @@ namespace libCptBq
             Nom = nom;
             Solde = solde;
             DecouvertAutorise = decouvertAutorise;
+            MesMouvements = new List<Mouvement>();
         }
         /// <summary>
         /// Constructeur de compte par défaut
@@ -63,12 +70,8 @@ namespace libCptBq
             this.Nom = "";
             this.Solde = 0;
             this.DecouvertAutorise = 0;
+            MesMouvements = new List<Mouvement>();
         }
-        /// <summary>
-        /// Réecriture de la méthode ToString
-        /// </summary>
-        /// <returns></returns>
-
 
         /// <summary>
         /// Crédite le compte du montant spécifié
@@ -76,11 +79,8 @@ namespace libCptBq
         /// <param name="montant">Le montant à créditer</param>
         public void Crediter(decimal montant)
         {
-            if (montant < 1m || montant == 0)
-            {
-                return;
-            }
-            Solde += montant;
+            if(montant > 0)
+                Solde += montant;
         }
 
         /// <summary>
@@ -90,14 +90,13 @@ namespace libCptBq
         /// <returns>True si le débit a été effectué, False sinon</returns>
         public bool Debiter(decimal montant)
         {
-            if (montant < 0 || montant == 0 || montant > Solde)
+            if (montant < 0 || montant == 0 || montant > (Solde + Math.Abs(DecouvertAutorise)))
             {
                 return false;
             }
             Solde -= montant;
             return true;
         }
-
 
         /// <summary>
         /// Transférer un montant vers un autre compte
@@ -111,14 +110,10 @@ namespace libCptBq
             {
                 return false;
             }
-            else
-            {
-                this.Debiter(n);
-                c.Crediter(n);
-            } 
+            this.Debiter(n);
+            c.Crediter(n);
             return true;
         }
-
 
         /// <summary>
         /// Savoir si le solde est supérieur à celui d'un autre compte
@@ -127,13 +122,43 @@ namespace libCptBq
         /// <returns></returns>
         public bool Superieur(Compte c)
         {
-            if(this.solde > c.solde)
-                return true;
-            return false;
+            return this.solde > c.solde;
         }
+
+        public void AjouterMouvement(Mouvement m)
+        {
+            MesMouvements.Add(m);
+        }
+
+        public void AjouterMouvement(decimal montant, DateTime dateMvt, string codeType)
+        {
+            Mouvement m = new Mouvement(montant, dateMvt, codeType);
+            decimal tempsSolde = Solde;
+            if (m.LeType.Sens == '-')
+            {
+                if (!this.Debiter(montant))
+                    throw new InvalidOperationException("Débit impossible, solde insuffisant.");
+            }
+            else
+                this.Crediter(montant);
+
+            if (tempsSolde != Solde)
+                AjouterMouvement(m);
+        }
+
+        /// <summary>
+        /// Réecriture de la méthode ToString
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            return $"numero: {Numero} nom: {Nom} solde: {Solde} decouvert autorisé: {DecouvertAutorise}\n";
+            StringBuilder infosCompte =  new StringBuilder();
+            infosCompte.AppendLine($"numero: {Numero} nom: {Nom} solde: {Solde} decouvert autorisé: {DecouvertAutorise}");
+            foreach(Mouvement m in MesMouvements)
+            {
+                infosCompte.AppendLine(m.ToString());
+            }
+            return infosCompte.ToString();
         }
     }
 }

@@ -71,7 +71,7 @@ namespace testUnCptBq
         }
 
         [TestMethod]
-        public void ConstructeurCompteExiste()
+        public void ConstructeurCompteExiste() 
         {
             //Arranger
             Banque banque = new Banque();
@@ -80,6 +80,17 @@ namespace testUnCptBq
             Assert.IsNotNull(banque, "Le constructeur de Banque ne fonctionne pas correctement");
             Assert.IsNotNull(banque.MesComptes, "La propriété MesComptes n'est pas initialisée");
         }
+        [TestMethod]
+        public void ConstructeurBanqueInitialiseListeVide()
+        {
+            //Arranger
+            Banque banque = new Banque();
+
+            //Assert
+            Assert.IsNotNull(banque.MesComptes, "La propriété MesComptes n'est pas initialisée");
+            Assert.AreEqual(0, banque.MesComptes.Count, "La liste MesComptes devrait être vide à l'initialisation");
+        }
+
 
         [TestMethod]
         public void TestAjouterCompte()
@@ -121,6 +132,39 @@ namespace testUnCptBq
             Compte compte = b.RendCompte(123);
             //Assert
             Assert.IsNull(compte);
+        }
+
+        [TestMethod]
+        public void TestToStringBanque()
+        {
+            //Arrange
+            Compte c1 = new Compte(12345, "toto", 1000.00m, -500.00m);
+            Compte c2 = new Compte(45657, "titi", 2000.00m, -1000.00m);
+            Banque b = new Banque();
+            b.AjouteCompte(c1);
+            b.AjouteCompte(c2);
+            string expected = "numero: 12345 nom: toto solde: 1000,00 decouvert autorisé: -500,00\n" +
+                              "numero: 45657 nom: titi solde: 2000,00 decouvert autorisé: -1000,00\n";
+            //Agir
+            string result = b.ToString();
+            //Assert
+            Assert.AreEqual(expected, result, "La méthode ToString() de la classe Banque ne retourne pas le format attendu.");
+        }
+
+        [TestMethod]
+        public void TestMaxCompte()
+        {
+            Compte c1 = new Compte(12345, "toto", 1000.00m, -500.00m);
+            Compte c2 = new Compte(45657, "titi", 2000.00m, -1000.00m);
+            Compte c3 = new Compte(78901, "tata", 3000.00m, -1500.00m);
+            Banque b = new Banque();
+            b.AjouteCompte(c1);
+            b.AjouteCompte(c2);
+            b.AjouteCompte(c3);
+            //Agir
+            Compte result = b.CompteMax();
+            //Assert
+            Assert.AreEqual(c3, result, "La méthode CompteMax() ne retourne pas le compte avec le solde maximum.");
         }
 
     }
