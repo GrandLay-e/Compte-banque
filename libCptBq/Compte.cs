@@ -160,6 +160,20 @@ namespace libCptBq
             AjouterMouvement(m);
         }
 
+
+        /// <summary>
+        /// Méthode pour ajouter un mouvement avec les éléments constitutifs d'un mouvement
+        /// différement de la méthode précédente, on passe un Type en paramètre
+        /// </summary>
+        /// <param name="montant"></param>
+        /// <param name="dateMvt"></param>
+        /// <param name="type"></param>
+        public void AjouterMouvement(decimal montant, DateTime dateMvt, Type_ type)
+        {
+            Mouvement m = new Mouvement(montant, dateMvt, type);
+            AjouterMouvement(m);
+        }
+
         /// <summary>
         /// Réecriture de la méthode ToString
         /// </summary>

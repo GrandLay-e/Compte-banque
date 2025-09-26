@@ -60,8 +60,8 @@ namespace testUnCptBq
             Mouvement mouvement = new Mouvement
             {
                 Montant = 150m,
-                DateMvt =  new DateTime(2025, 05, 1), 
-                LeType = new Type_("vir") 
+                DateMvt = new DateTime(2025, 05, 1),
+                LeType = new Type_("vir")
             };
             Mouvement mouvement2 = new Mouvement
             {
@@ -73,13 +73,16 @@ namespace testUnCptBq
             // Agir
             compte.AjouterMouvement(mouvement);
             compte.AjouterMouvement(mouvement2);
-
+            compte.AjouterMouvement(100m, new DateTime(2025, 05, 3), "des");
+            compte.AjouterMouvement(50m, new DateTime(2025, 05, 4), new Type_("ret"));
+            decimal soldeAttendu = 1000.50m + 150m - 200m + 100m - 50m;
             // Assert
-            Assert.AreEqual(2, compte.MesMouvements.Count, "Le mouvement n'a pas été ajouté correctement.");
+            Assert.AreEqual(4, compte.MesMouvements.Count, "Le nombre total de mouvements n'est pas correct.");
             Assert.AreEqual(mouvement, compte.MesMouvements[0], "Le premier mouvement ajouté n'est pas correct.");
             Assert.AreEqual(mouvement2, compte.MesMouvements[1], "Le deuxième mouvement ajouté n'est pas correct.");
-
+            Assert.AreEqual(soldeAttendu, compte.Solde, "Le solde n'a pas été mis à jour correctement.");
         }
+        
 
         [TestMethod]
         public void AjouterMouvementInvalide_ThrowsException()
