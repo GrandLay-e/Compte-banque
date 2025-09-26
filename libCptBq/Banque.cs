@@ -10,7 +10,7 @@ namespace libCptBq
         /// Les attributs de la classe Banque
         /// </summary>
         private List<Compte> mesComptes;
-        private List<TypeMouvement> mesTypes;
+        private List<Type_> mesTypes;
 
         //___________________________________________________________________________________///////////
         /// <summary>
@@ -22,7 +22,7 @@ namespace libCptBq
             set { mesComptes = value; }
         }
 
-        public List<TypeMouvement> MesTypes
+        public List<Type_> MesTypes
         {
             get { return mesTypes; }
             set { mesTypes = value; }
@@ -35,7 +35,7 @@ namespace libCptBq
         public Banque()
         {
             MesComptes = new List<Compte>();
-            MesTypes = new List<TypeMouvement>();
+            MesTypes = new List<Type_>();
         }
 
         //___________________________________________________________________________________///////////
@@ -43,7 +43,7 @@ namespace libCptBq
         /// Adds a new type to the collection.
         /// </summary>
         /// <param name="unType">The type to add to the collection. Cannot be <see langword="null"/>.</param>
-        public void AjouterType(TypeMouvement unType)
+        public void AjouterType(Type_ unType)
         {
             this.MesTypes.Add(unType);
         }
@@ -58,7 +58,7 @@ namespace libCptBq
         public void AjouterType(string code, string libelle, char sens)
         {
             // On crée un nouveau type et on l'ajoute à la liste
-            AjouterType(new TypeMouvement(code, libelle, sens));
+            AjouterType(new Type_(code, libelle, sens));
         }
 
         //___________________________________________________________________________________///////////

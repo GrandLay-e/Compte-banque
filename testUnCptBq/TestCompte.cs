@@ -61,13 +61,13 @@ namespace testUnCptBq
             {
                 Montant = 150m,
                 DateMvt =  new DateTime(2025, 05, 1), 
-                LeType = new TypeMouvement("vir") 
+                LeType = new Type_("vir") 
             };
             Mouvement mouvement2 = new Mouvement
             {
                 Montant = 200m,
                 DateMvt = new DateTime(2025, 05, 2),
-                LeType = new TypeMouvement("dab")
+                LeType = new Type_("dab")
             };
 
             // Agir
@@ -96,7 +96,7 @@ namespace testUnCptBq
             {
                 Montant = 2000m, // Montant supérieur au solde + découvert autorisé
                 DateMvt = new DateTime(2025, 05, 1),
-                LeType = new TypeMouvement("pre")
+                LeType = new Type_("pre")
             };
             // Agir & Assert
             try
@@ -127,7 +127,7 @@ namespace testUnCptBq
                 Solde = 1000.50m,
                 DecouvertAutorise = -500.00m
             };
-            string expected = "numero: 123456 nom: toto solde: 1000,50 decouvert autorisé: -500,00" + Environment.NewLine;
+            string expected = "numero: 123456 nom: toto solde: 1000,50 euros decouvert autorisé: -500,00 euros" + Environment.NewLine;
 
             // Agir
             string result = compte.ToString();
@@ -147,7 +147,7 @@ namespace testUnCptBq
                 Solde = 0.00m,
                 DecouvertAutorise = 0.00m
             };
-            string expected = "numero: 0 nom:  solde: 0,00 decouvert autorisé: 0,00" + Environment.NewLine;
+            string expected = "numero: 0 nom:  solde: 0,00 euro decouvert autorisé: 0,00 euro" + Environment.NewLine;
 
             // Agir
             string result = compte.ToString();
@@ -169,8 +169,8 @@ namespace testUnCptBq
             };
             compte.AjouterMouvement(new Mouvement(200.00m, new DateTime(2023, 10, 1), "pre"));
             StringBuilder expected = new StringBuilder();
-            expected.AppendLine("numero: 123456 nom: toto solde: 800,50 decouvert autorisé: -500,00");
-            expected.AppendLine($"01/10/2023 - Prélèvement de 200,00");
+            expected.AppendLine("numero: 123456 nom: toto solde: 800,50 euros decouvert autorisé: -500,00 euros");
+            expected.AppendLine($"01/10/2023 - Prélèvement de 200,00 euros");
             // Agir
             string result = compte.ToString();
             // Assert
@@ -190,9 +190,9 @@ namespace testUnCptBq
             compte.AjouterMouvement(new Mouvement(200.00m, new DateTime(2023, 10, 1), "pre"));
             compte.AjouterMouvement(new Mouvement(150.00m, new DateTime(2023, 10, 5), "des"));
             StringBuilder expected = new StringBuilder();
-            expected.AppendLine("numero: 123456 nom: toto solde: 950,50 decouvert autorisé: -500,00");
-            expected.AppendLine($"01/10/2023 - Prélèvement de 200,00");
-            expected.AppendLine($"05/10/2023 - Dépôt d'espèce de 150,00");
+            expected.AppendLine("numero: 123456 nom: toto solde: 950,50 euros decouvert autorisé: -500,00 euros");
+            expected.AppendLine($"01/10/2023 - Prélèvement de 200,00 euros");
+            expected.AppendLine($"05/10/2023 - Dépôt d'espèce de 150,00 euros");
             // Agir
             string result = compte.ToString();
             // Assert
@@ -212,7 +212,7 @@ namespace testUnCptBq
             };
 
             // Mouvement invalide (pas assez dans le compte pour faire ce prélèvement)
-            string toStringAttendu = "numero: 123456 nom: toto solde: 1000,50 decouvert autorisé: -500,00" + Environment.NewLine;
+            string toStringAttendu = "numero: 123456 nom: toto solde: 1000,50 euros decouvert autorisé: -500,00 euros" + Environment.NewLine;
             
             // Agir
             try

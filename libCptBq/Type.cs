@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace libCptBq
 {
-    public class TypeMouvement
+    public class Type_
     {
         /// <summary>
         /// Attributs qui permet de valider le code, le libellé et le sens. 
@@ -56,7 +56,7 @@ namespace libCptBq
         /// <summary>
         /// Le constructeur par défaut initialise les attributs à des valeurs par défaut
         /// </summary>
-        public TypeMouvement()
+        public Type_()
         {
             Code = "";
             Libelle = "";
@@ -73,7 +73,7 @@ namespace libCptBq
         /// <param name="libelle"> Le libellé du Type de Mouvement </param>
         /// <param name="sens"> Le sens du Type de Mouvement </param>
         /// <exception cref="ArgumentException"> L'exception est levée si les valeurs ne sont pas valides. </exception>
-        public TypeMouvement(string code, string libelle, char sens)
+        public Type_(string code, string libelle, char sens)
         {
             if (!valideCodeLibelleEtSens.ContainsKey(code) || 
                 valideCodeLibelleEtSens[code].libelle != libelle || 
@@ -93,7 +93,7 @@ namespace libCptBq
         /// </summary>
         /// <param name="code"> Le code du Type de Mouvement </param>
         /// <exception cref="ArgumentException"> L'exception est levée si le code est inconnu. </exception>
-        public TypeMouvement(string code)
+        public Type_(string code)
         {
             if (!valideCodeLibelleEtSens.ContainsKey(code))
             {
@@ -104,10 +104,20 @@ namespace libCptBq
             this.Sens = valideCodeLibelleEtSens[code].sens;
         }
 
+        /// <summary>
+        /// Méthode qui retourne le code du type de mouvement
+        /// </summary>
+        /// <returns> Code du type </returns>
         public string GetCode() => Code;
+
+        /// <summary>
+        /// Méthode qui retourne le type de mouvement sous forme de chaine formatée
+        /// Si les attributs ne sont pas initialisés ou sont vides, retourne null
+        /// </summary>
+        /// <returns> Null | Chaîne formatée du type de mouvement </returns>
         public override string ToString()
-        {
-            return $"{code} - {libelle} ({sens})";
-        }
+            //vérifie que les attributs ne sont pas vides ou non initialisés
+            => Code == "" || Libelle == "" || Sens == ' ' ? null : //si c'est le cas, retourne null
+            $"{Code} - {Libelle} ({Sens})"; //sinon, retourne la chaîne formatée
     }
 }

@@ -63,7 +63,7 @@ namespace testUnCptBq
         public void ClassTypeMouvementExiste()
         {
             //Arranger
-            Type typeMouvement = typeof(TypeMouvement);
+            Type typeMouvement = typeof(Type_);
 
             //Auditer
             Assert.IsNotNull(typeMouvement, "La classe TypeMouvement n'existe pas.");
@@ -74,7 +74,7 @@ namespace testUnCptBq
         public void ConstructeurTypeMouvementExiste()
         {
             // Arranger
-            Type typeMouvement = typeof(TypeMouvement);
+            Type typeMouvement = typeof(Type_);
             Type[] parametersTypes = new Type[] { typeof(string), typeof(string), typeof(char) };
             // Agir
             var constructeur = typeMouvement.GetConstructor(parametersTypes);
@@ -87,7 +87,7 @@ namespace testUnCptBq
         public void ProprieteExisteDanstypeMouvement()
         { 
             // Arranger
-            Type typeMouvement = typeof(TypeMouvement);
+            Type typeMouvement = typeof(Type_);
             // Auditer
             Assert.IsNotNull(typeMouvement.GetProperty("Code"), "La propriété Code n'existe pas dans la classe TypeMouvement.");
             Assert.IsNotNull(typeMouvement.GetProperty("Libelle"), "La propriété Libelle n'existe pas dans la classe TypeMouvement.");
@@ -99,7 +99,7 @@ namespace testUnCptBq
         public void ContructeurDeTypeMouvementSansParametre()
         {
             //Arranger
-            TypeMouvement typeMouvement = new TypeMouvement();
+            Type_ typeMouvement = new Type_();
 
             //Auditer
             Assert.IsNotNull(typeMouvement, "L'objet TypeMouvement n'a pas été créé.");
@@ -111,7 +111,7 @@ namespace testUnCptBq
         public void ClassTypeMouvementBienInitialisé()
         {
             //Arranger
-            TypeMouvement typeMouvement = new TypeMouvement("pre", "Prélèvement", '-');
+            Type_ typeMouvement = new Type_("pre", "Prélèvement", '-');
 
             //Auditer
             Assert.IsNotNull(typeMouvement, "L'objet TypeMouvement n'a pas été créé.");
@@ -132,7 +132,7 @@ namespace testUnCptBq
 
             //Agir
             try {
-                new TypeMouvement(code, libelle, sens);
+                new Type_(code, libelle, sens);
             }catch(ArgumentException ex)
             {
                 //Auditer
@@ -144,7 +144,7 @@ namespace testUnCptBq
         public void ContructeurTypeMouvementAvecCodeCommeParametre()
         {
             //Arranger
-            TypeMouvement typeMouvement = new TypeMouvement("dab");
+            Type_ typeMouvement = new Type_("dab");
             //Auditer
             Assert.IsNotNull(typeMouvement, "L'objet TypeMouvement n'a pas été créé.");
             Assert.AreEqual("dab", typeMouvement.Code, "Le code n'a pas été initialisé correctement.");
@@ -158,19 +158,23 @@ namespace testUnCptBq
             //Arranger
             string mauvaisCode = "xyz";
             string messageAttendu = $"Le code '{mauvaisCode}' n'est pas valide.";
+            try
+            {
+                //Agir
+                new Type_(mauvaisCode);
+            }catch(ArgumentException ex)
+            {
+                //Auditer
+                Assert.AreEqual(messageAttendu, ex.Message);
+            }
 
-            //Agir
-            var exception = Assert.ThrowsException<ArgumentException>(() => new TypeMouvement(mauvaisCode));
-
-            //Auditer
-            Assert.AreEqual(messageAttendu, exception.Message);
         }
 
         [TestMethod]
         public void ToStringTypeMouvementRetourneCorrectement()
         {
             //Arranger
-            TypeMouvement typeMouvement = new TypeMouvement("ret", "Retrait en guichet", '-');
+            Type_ typeMouvement = new Type_("ret", "Retrait en guichet", '-');
             string attendu = "ret - Retrait en guichet (-)";
 
             //Agir
@@ -185,7 +189,7 @@ namespace testUnCptBq
         public void GetCodeRetourneCorrectement()
         {
             //Arranger
-            TypeMouvement t = new TypeMouvement("dab", "Retrait distributeur", '-');
+            Type_ t = new Type_("dab", "Retrait distributeur", '-');
             string codeAttendu = "dab";
 
             //Agir
@@ -193,6 +197,17 @@ namespace testUnCptBq
 
             //Auditer
             Assert.AreEqual(codeAttendu, codeResultat, "La méthode GetCode() ne retourne pas le résultat attendu.");
+        }
+
+        [TestMethod]
+        public void TestToStringAvecAttributsVides()
+        {
+            //Arranger
+            Type_ t = new Type_();
+
+            //Assert
+            Assert.IsNull(t.ToString(), "Le ToString devrait renvoyer null");
+
         }
 
     }

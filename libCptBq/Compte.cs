@@ -125,21 +125,35 @@ namespace libCptBq
             return this.solde > c.solde;
         }
 
+
+        /// <summary>
+        /// Méthode pour ajouter un mouvement au compte en fonction de son type (débit/crédit)  
+        /// </summary>
+        /// <param name="m"> Le paramètre Mouvement </param>
+        /// <exception cref="InvalidOperationException"> Exception levée dans le cas où le débit est impossible </exception>
         public void AjouterMouvement(Mouvement m)
         {
-            decimal tempsSolde = Solde;
-            if (m.LeType.Sens == '-')
+            decimal tempsSolde = Solde; // stocker le solde actuel avant modification
+            if (m.LeType.Sens == '-') // Débit
             {
-                if (!this.Debiter(m.Montant))
-                    throw new InvalidOperationException("Débit impossible, solde insuffisant.");
+                if (!this.Debiter(m.Montant)) // Si le débit échoue
+                    throw new InvalidOperationException("Débit impossible, solde insuffisant."); // Lever une exception
             }
-            else
+            else //Si Crédit : Créditer
                 this.Crediter(m.Montant);
 
+            // Ajouter le mouvement à la liste seulement si le solde a changé
             if (tempsSolde != Solde)
                 MesMouvements.Add(m);
         }
 
+
+        /// <summary>
+        ///  Méthode pour ajouter un mouvement avec les éléments constitutifs d'un mouvement    
+        /// </summary>
+        /// <param name="montant"> Le montant du mouvement </param>
+        /// <param name="dateMvt"> La date du mouvement </param>
+        /// <param name="codeType">Le code qui permet d'initialiser un objet Type </param>
         public void AjouterMouvement(decimal montant, DateTime dateMvt, string codeType)
         {
             Mouvement m = new Mouvement(montant, dateMvt, codeType);
@@ -152,8 +166,11 @@ namespace libCptBq
         /// <returns></returns>
         public override string ToString()
         {
+            string euroSolde = Solde > 1m ? "euros" : "euro";
+            string euroDecouvert = DecouvertAutorise < -1m ? "euros" : "euro";
+
             StringBuilder infosCompte =  new StringBuilder();
-            infosCompte.AppendLine($"numero: {Numero} nom: {Nom} solde: {Solde} decouvert autorisé: {DecouvertAutorise}");
+            infosCompte.AppendLine($"numero: {Numero} nom: {Nom} solde: {Solde} {euroSolde} decouvert autorisé: {DecouvertAutorise} {euroDecouvert}");
             foreach(Mouvement m in MesMouvements)
             {
                 infosCompte.AppendLine(m.ToString());

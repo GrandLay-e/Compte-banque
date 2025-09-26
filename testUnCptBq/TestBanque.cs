@@ -14,9 +14,9 @@ namespace testUnCptBq
     {
         public TestBanque()
         {
-            //
-            // TODO: ajoutez ici la logique du constructeur
-            //
+            ///
+            /// TODO: ajoutez ici la logique du constructeur
+            ///
         }
 
         private TestContext testContextInstance;
@@ -144,15 +144,63 @@ namespace testUnCptBq
             b.AjouteCompte(c1);
             b.AjouteCompte(c2);
             StringBuilder expected = new StringBuilder();
-            expected.AppendLine("numero: 12345 nom: toto solde: 1000,00 decouvert autorisé: -500,00");
-            expected.AppendLine("numero: 45657 nom: titi solde: 2000,00 decouvert autorisé: -1000,00");
+            expected.AppendLine("numero: 12345 nom: toto solde: 1000,00 euros decouvert autorisé: -500,00 euros");
+            expected.AppendLine("numero: 45657 nom: titi solde: 2000,00 euros decouvert autorisé: -1000,00 euros");
+            
             //Agir
             string result = b.ToString();
+            
             //Assert
             Assert.AreEqual(expected.ToString(), result, "La méthode ToString() de la classe Banque ne retourne pas le format attendu.");
         }
 
         [TestMethod]
+        public void TestToStringBanqueVide()
+        {
+            //Arrange
+            Banque b = new Banque();
+            string expected = string.Empty;
+            //Agir
+            string result = b.ToString();
+            //Assert
+            Assert.AreEqual(expected, result, "La méthode ToString() de la classe Banque ne retourne pas une chaîne vide pour une banque sans comptes.");
+        }
+
+        [TestMethod]
+        public void ToStringBanqueAvecCompteEtDesMouvements()
+        {
+            //Arrange
+            Compte c1 = new Compte(12345, "toto", 1000.00m, -500.00m);
+            Compte c2 = new Compte(45657, "titi", 2000.00m, -1000.00m);
+
+            Mouvement m = new Mouvement
+            {
+                Montant = 100m,
+                DateMvt = new DateTime(2025, 9, 1),
+                LeType = new Type_("pre")
+            };
+
+            c1.AjouterMouvement(m);
+            Banque b = new Banque();
+            b.AjouteCompte(c1);
+            b.AjouteCompte(c2);
+            StringBuilder expected = new StringBuilder();
+            expected.AppendLine("numero: 12345 nom: toto solde: 900,00 euros decouvert autorisé: -500,00 euros");
+            expected.AppendLine("01/09/2025 - Prélèvement de 100 euros");
+            expected.AppendLine("numero: 45657 nom: titi solde: 2000,00 euros decouvert autorisé: -1000,00 euros");
+
+            //Agir
+            string result = b.ToString();
+
+            //Assert
+            Console.WriteLine(expected.ToString());
+            Console.WriteLine(result);
+            Assert.AreEqual(expected.ToString(), result, "La méthode ToString() de la classe Banque ne retourne pas le format attendu.");
+
+        }
+
+        [TestMethod]
+
         public void TestMaxCompte()
         {
             Compte c1 = new Compte(12345, "toto", 1000.00m, -500.00m);
